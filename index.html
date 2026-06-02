@@ -1,0 +1,434 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+.deck{width:100%;max-width:680px;margin:0 auto;padding:1rem 0}
+.slide{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:2rem;margin-bottom:1.5rem;display:none}
+.slide.active{display:block}
+.slide-nav{display:flex;align-items:center;justify-content:space-between;margin-top:1.5rem;padding-top:1rem;border-top:0.5px solid var(--color-border-tertiary)}
+.slide-counter{font-size:13px;color:var(--color-text-secondary)}
+.nav-btn{background:transparent;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:8px 20px;font-size:14px;color:var(--color-text-primary);cursor:pointer}
+.nav-btn:hover{background:var(--color-background-secondary)}
+.nav-btn:disabled{opacity:0.3;cursor:default}
+.program-badge{display:inline-block;padding:4px 14px;border-radius:var(--border-radius-md);font-size:12px;font-weight:500;margin-bottom:1rem}
+.badge-xcare{background:#E6F1FB;color:#0C447C}
+.badge-privilege{background:#EEEDFE;color:#3C3489}
+.badge-both{background:#EAF3DE;color:#27500A}
+.slide-title{font-size:22px;font-weight:500;color:var(--color-text-primary);margin-bottom:0.5rem;line-height:1.3}
+.slide-subtitle{font-size:15px;color:var(--color-text-secondary);margin-bottom:1.5rem;line-height:1.6}
+.benefit-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.benefit-card{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:1rem}
+.benefit-icon{font-size:20px;margin-bottom:8px;color:#185FA5}
+.benefit-icon.purple{color:#534AB7}
+.benefit-title{font-size:14px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.benefit-detail{font-size:12px;color:var(--color-text-secondary);line-height:1.5}
+.metric-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:1.5rem}
+.metric{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:1rem;text-align:center}
+.metric-num{font-size:28px;font-weight:500;color:#185FA5}
+.metric-num.purple{color:#534AB7}
+.metric-label{font-size:12px;color:var(--color-text-secondary);margin-top:4px}
+.process-steps{display:flex;flex-direction:column;gap:12px}
+.step{display:flex;align-items:flex-start;gap:12px}
+.step-num{width:28px;height:28px;border-radius:50%;background:#E6F1FB;color:#0C447C;font-size:13px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.step-num.purple{background:#EEEDFE;color:#534AB7}
+.step-content{flex:1}
+.step-title{font-size:14px;font-weight:500;color:var(--color-text-primary);margin-bottom:3px}
+.step-desc{font-size:13px;color:var(--color-text-secondary);line-height:1.5}
+.tc-list{list-style:none;display:flex;flex-direction:column;gap:8px}
+.tc-list li{font-size:13px;color:var(--color-text-secondary);line-height:1.5;padding-left:1.25rem;position:relative}
+.tc-list li::before{content:"·";position:absolute;left:0;color:var(--color-text-secondary);font-size:16px;top:-1px}
+.section-label{font-size:11px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.75rem}
+.divider{border:none;border-top:0.5px solid var(--color-border-tertiary);margin:1.25rem 0}
+.contact-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:1rem}
+.contact-card{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:0.875rem}
+.contact-name{font-size:14px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.contact-info{font-size:12px;color:var(--color-text-secondary);line-height:1.7}
+.highlight-box{background:#E6F1FB;border-radius:var(--border-radius-md);padding:1rem;margin-bottom:1.25rem}
+.highlight-box.purple{background:#EEEDFE}
+.highlight-text{font-size:14px;color:#0C447C;line-height:1.6}
+.highlight-text.purple{color:#3C3489}
+.cover-header{text-align:center;padding:1rem 0 0.5rem}
+.cover-logo{font-size:13px;font-weight:500;color:var(--color-text-secondary);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:1.5rem}
+.cover-title{font-size:28px;font-weight:500;color:var(--color-text-primary);margin-bottom:0.5rem;line-height:1.2}
+.cover-desc{font-size:15px;color:var(--color-text-secondary);margin-bottom:2rem;line-height:1.6}
+.program-pills{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:1rem}
+.pill{padding:8px 20px;border-radius:50px;font-size:14px;font-weight:500}
+.pill-blue{background:#B5D4F4;color:#042C53}
+.pill-purple{background:#CECBF6;color:#26215C}
+.meta-row{display:flex;gap:1.5rem;justify-content:center;font-size:12px;color:var(--color-text-secondary)}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.program-block{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:1.25rem}
+.program-block-title{font-size:15px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.program-block-sub{font-size:12px;color:var(--color-text-secondary);margin-bottom:1rem}
+.mini-list{list-style:none;display:flex;flex-direction:column;gap:6px}
+.mini-list li{font-size:12px;color:var(--color-text-secondary);padding-left:1rem;position:relative;line-height:1.4}
+.mini-list li::before{content:"—";position:absolute;left:0;color:var(--color-text-tertiary)}
+</style>
+
+<h2 class="sr-only">Presentación informativa de los programas XCARE y XCARE Privilege de XPENG México</h2>
+
+<div class="deck">
+
+<div class="slide active" id="slide-1">
+  <div class="cover-header">
+    <div class="cover-logo">XPENG México · Boletín Posventa</div>
+    <div class="cover-title">Programas XCARE y<br>XCARE Privilege</div>
+    <div class="cover-desc">Especificaciones para distribuidores — Herramientas de cierre y diferenciadores de marca</div>
+    <div class="program-pills">
+      <span class="pill pill-blue">XCARE · 5 años</span>
+      <span class="pill pill-purple">XCARE Privilege · 3 años</span>
+    </div>
+    <div class="meta-row">
+      <span>BPV_13042026_4</span>
+      <span>13 de abril de 2026</span>
+      <span>Distribuidores</span>
+    </div>
+  </div>
+  <div class="slide-nav">
+    <button class="nav-btn" onclick="prevSlide()" id="prev-btn" disabled><i class="ti ti-arrow-left" aria-hidden="true"></i> Anterior</button>
+    <span class="slide-counter" id="counter">1 / 10</span>
+    <button class="nav-btn" onclick="nextSlide()" id="next-btn">Siguiente <i class="ti ti-arrow-right" aria-hidden="true"></i></button>
+  </div>
+</div>
+
+<div class="slide" id="slide-2">
+  <div class="program-badge badge-both">Resumen ejecutivo</div>
+  <div class="slide-title">Dos programas, una propuesta de valor</div>
+  <div class="slide-subtitle">Incluidos para todos los clientes desde el primer día, sin costo adicional.</div>
+  <div class="two-col">
+    <div class="program-block">
+      <div class="program-block-title">XCARE</div>
+      <div class="program-block-sub">Asistencia en el camino · 5 años</div>
+      <ul class="mini-list">
+        <li>Cobertura nacional 24/7 · 365 días</li>
+        <li>Grúa hasta 200 km</li>
+        <li>Paso de corriente ilimitado</li>
+        <li>Apoyo en viaje (hotel + renta de auto)</li>
+        <li>Llanta ponchada · Cerrajero</li>
+      </ul>
+    </div>
+    <div class="program-block">
+      <div class="program-block-title">XCARE Privilege</div>
+      <div class="program-block-sub">Asistencia lifestyle · 3 años</div>
+      <ul class="mini-list">
+        <li>Valet para mantenimiento programado</li>
+        <li>Concierge de viajes (ilimitado)</li>
+        <li>Telemedicina (3 eventos/año)</li>
+        <li>Asesoría legal de tránsito (ilimitado)</li>
+        <li>Asistencia veterinaria para mascotas</li>
+      </ul>
+    </div>
+  </div>
+  <div class="highlight-box" style="margin-top:1.25rem">
+    <div class="highlight-text">Estos programas deben comunicarse activamente durante el proceso de venta y reforzarse al momento de la entrega del vehículo.</div>
+  </div>
+  <div class="slide-nav">
+    <button class="nav-btn" onclick="prevSlide()" id="prev-btn"><i class="ti ti-arrow-left" aria-hidden="true"></i> Anterior</button>
+    <span class="slide-counter" id="counter">2 / 10</span>
+    <button class="nav-btn" onclick="nextSlide()" id="next-btn">Siguiente <i class="ti ti-arrow-right" aria-hidden="true"></i></button>
+  </div>
+</div>
+
+<div class="slide" id="slide-3">
+  <div class="program-badge badge-xcare">XCARE · Asistencia en el camino</div>
+  <div class="slide-title">Cobertura completa · 5 años incluidos</div>
+  <div class="slide-subtitle">Cobertura nacional 24/7 los 365 días del año para todos los clientes.</div>
+  <div class="metric-row">
+    <div class="metric"><div class="metric-num">5</div><div class="metric-label">años de cobertura</div></div>
+    <div class="metric"><div class="metric-num">24/7</div><div class="metric-label">disponibilidad</div></div>
+    <div class="metric"><div class="metric-num">200 km</div><div class="metric-label">grúa incluida</div></div>
+  </div>
+  <div class="benefit-grid">
+    <div class="benefit-card">
+      <i class="ti ti-truck benefit-icon" aria-hidden="true"></i>
+      <div class="benefit-title">Grúa</div>
+      <div class="benefit-detail">Hasta 200 km · 2 eventos por año</div>
+    </div>
+    <div class="benefit-card">
+      <i class="ti ti-bolt benefit-icon" aria-hidden="true"></i>
+      <div class="benefit-title">Paso de corriente</div>
+      <div class="benefit-detail">Ilimitado</div>
+    </div>
+    <div class="benefit-card">
+      <i class="ti ti-circles benefit-icon" aria-hidden="true"></i>
+      <div class="benefit-title">Llanta ponchada</div>
+      <div class="benefit-detail">2 eventos por año</div>
+    </div>
+    <div class="benefit-card">
+      <i class="ti ti-key benefit-icon" aria-hidden="true"></i>
+      <div class="benefit-title">Cerrajero</div>
+      <div class="benefit-detail">1 evento por año</div>
+    </div>
+    <div class="benefit-card">
+      <i class="ti ti-home benefit-icon" aria-hidden="true"></i>
+      <div class="benefit-title">Transporte a domicilio</div>
+      <div class="benefit-detail">1 evento por año</div>
+    </div>
+    <div class="benefit-card">
+      <i class="ti ti-map-pin benefit-icon" aria-hidden="true"></i>
+      <div class="benefit-title">Apoyo en viaje</div>
+      <div class="benefit-detail">+100 km del domicilio · Hotel + renta de auto</div>
+    </div>
+  </div>
+  <div class="slide-nav">
+    <button class="nav-btn" onclick="prevSlide()"><i class="ti ti-arrow-left" aria-hidden="true"></i> Anterior</button>
+    <span class="slide-counter">3 / 10</span>
+    <button class="nav-btn" onclick="nextSlide()">Siguiente <i class="ti ti-arrow-right" aria-hidden="true"></i></button>
+  </div>
+</div>
+
+<div class="slide" id="slide-4">
+  <div class="program-badge badge-xcare">XCARE · Apoyo en viaje</div>
+  <div class="slide-title">Continuidad cuando más se necesita</div>
+  <div class="slide-subtitle">Aplica cuando el cliente se encuentra a más de 100 km de su residencia.</div>
+  <div class="two-col">
+    <div class="program-block">
+      <i class="ti ti-building benefit-icon" style="font-size:20px;margin-bottom:8px;color:#185FA5" aria-hidden="true"></i>
+      <div class="program-block-title">Hotel</div>
+      <div class="program-block-sub">1 evento anual</div>
+      <ul class="mini-list">
+        <li>Cobertura hasta $10,000 MXN</li>
+        <li>Solo cuando el vehículo queda inmovilizado</li>
+      </ul>
+    </div>
+    <div class="program-block">
+      <i class="ti ti-car benefit-icon" style="font-size:20px;margin-bottom:8px;color:#185FA5" aria-hidden="true"></i>
+      <div class="program-block-title">Renta de vehículo</div>
+      <div class="program-block-sub">1 evento anual</div>
+      <ul class="mini-list">
+        <li>Hasta 3 días de renta</li>
+        <li>Cobertura hasta $10,000 MXN</li>
+      </ul>
+    </div>
+  </div>
+  <div class="highlight-box" style="margin-top:1.25rem">
+    <div class="highlight-text">Este beneficio es un argumento clave durante el proceso de compra — brinda seguridad y continuidad de movilidad al cliente.</div>
+  </div>
+  <div class="slide-nav">
+    <button class="nav-btn" onclick="prevSlide()"><i class="ti ti-arrow-left" aria-hidden="true"></i> Anterior</button>
+    <span class="slide-counter">4 / 10</span>
+    <button class="nav-btn" onclick="nextSlide()">Siguiente <i class="ti ti-arrow-right" aria-hidden="true"></i></button>
+  </div>
+</div>
+
+<div class="slide" id="slide-5">
+  <div class="program-badge badge-xcare">XCARE · Proceso de uso</div>
+  <div class="slide-title">¿Cómo accede el cliente a la asistencia?</div>
+  <div class="slide-subtitle">Proceso simple y directo para activar el servicio en campo.</div>
+  <div class="process-steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">El cliente llama al número de asistencia</div>
+        <div class="step-desc">800 8716 881 — disponible 24/7 los 365 días del año</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">Selecciona la opción de asistencia en el camino</div>
+        <div class="step-desc">El sistema dirige al cliente con el equipo especializado según el tipo de asistencia requerida.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">Verificación de póliza</div>
+        <div class="step-desc">La información también está disponible en la póliza de garantía impresa que se entrega con el vehículo nuevo.</div>
+      </div>
+    </div>
+  </div>
+  <div class="highlight-box" style="margin-top:1.5rem">
+    <i class="ti ti-file-description" style="font-size:16px;color:#0C447C;vertical-align:-2px;margin-right:6px" aria-hidden="true"></i>
+    <span class="highlight-text">Recuerda incluir la póliza de garantía impresa en cada entrega de vehículo nuevo.</span>
+  </div>
+  <div class="slide-nav">
+    <button class="nav-btn" onclick="prevSlide()"><i class="ti ti-arrow-left" aria-hidden="true"></i> Anterior</button>
+    <span class="slide-counter">5 / 10</span>
+    <button class="nav-btn" onclick="nextSlide()">Siguiente <i class="ti ti-arrow-right" aria-hidden="true"></i></button>
+  </div>
+</div>
+
+<div class="slide" id="slide-6">
+  <div class="program-badge badge-privilege">XCARE Privilege · Membresía lifestyle</div>
+  <div class="slide-title">Más allá del vehículo · 3 años incluidos</div>
+  <div class="slide-subtitle">Un programa integral que posiciona a XPENG como aliado en el día a día del cliente.</div>
+  <div class="metric-row">
+    <div class="metric"><div class="metric-num purple">3</div><div class="metric-label">años de membresía</div></div>
+    <div class="metric"><div class="metric-num purple">5</div><div class="metric-label">categorías de servicio</div></div>
+    <div class="metric"><div class="metric-num purple">∞</div><div class="metric-label">concierge ilimitado</div></div>
+  </div>
+  <div class="benefit-grid">
+    <div class="benefit-card">
+      <i class="ti ti-car-garage benefit-icon purple" aria-hidden="true"></i>
+      <div class="benefit-title">Valet para mantenimiento</div>
+      <div class="benefit-detail">1 vez al año · CDMX, GDL y MTY</div>
+    </div>
+    <div class="benefit-card">
+      <i class="ti ti-plane benefit-icon purple" aria-hidden="true"></i>
+      <div class="benefit-title">Concierge de viajes</div>
+      <div class="benefit-detail">Ilimitado · 24/7 · 365 días</div>
+    </div>
+    <div class="benefit-card">
+      <i class="ti ti-stethoscope benefit-icon purple" aria-hidden="true"></i>
+      <div class="benefit-title">Telemedicina</div>
+      <div class="benefit-detail">3 consultas virtuales al año</div>
+    </div>
+    <div class="benefit-card">
+      <i class="ti ti-gavel benefit-icon purple" aria-hidden="true"></i>
+      <div class="benefit-title">Asesoría legal de tránsito</div>
+      <div class="benefit-detail">Ilimitado · orientación vehicular</div>
+    </div>
+    <div class="benefit-card">
+      <i class="ti ti-paw benefit-icon purple" aria-hidden="true"></i>
+      <div class="benefit-title">Asistencia veterinaria</div>
+      <div class="benefit-detail">Concierge ilimitado + 3 consultas virtuales/año</div>
+    </div>
+    <div class="benefit-card">
+      <i class="ti ti-shield-check benefit-icon purple" aria-hidden="true"></i>
+      <div class="benefit-title">Seguro para mascotas</div>
+      <div class="benefit-detail">1 evento · hasta $3,000 MXN · viajes en auto</div>
+    </div>
+  </div>
+  <div class="slide-nav">
+    <button class="nav-btn" onclick="prevSlide()"><i class="ti ti-arrow-left" aria-hidden="true"></i> Anterior</button>
+    <span class="slide-counter">6 / 10</span>
+    <button class="nav-btn" onclick="nextSlide()">Siguiente <i class="ti ti-arrow-right" aria-hidden="true"></i></button>
+  </div>
+</div>
+
+<div class="slide" id="slide-7">
+  <div class="program-badge badge-privilege">XCARE Privilege · Detalle de servicios</div>
+  <div class="slide-title">Valet y Concierge de viajes</div>
+  <div class="slide-subtitle">Servicios diferenciadores para la experiencia cotidiana del cliente.</div>
+  <div class="section-label">Valet para mantenimiento programado</div>
+  <ul class="tc-list">
+    <li>1 servicio anual incluido</li>
+    <li>Aplica en CDMX, Guadalajara y Monterrey</li>
+    <li>Programado con mínimo 48 horas de anticipación en horario hábil</li>
+    <li>Radio máximo de movimiento: 15 km con carga del vehículo al 80%</li>
+    <li>El vehículo no debe contener objetos de valor antes del servicio</li>
+  </ul>
+  <div class="divider"></div>
+  <div class="section-label">Concierge de viajes · 24/7 · Ilimitado</div>
+  <ul class="tc-list">
+    <li>Información general de destinos y orientación logística</li>
+    <li>Reservaciones en restaurantes, obras de teatro y actividades recreativas</li>
+    <li>Gestión de entradas para espectáculos y eventos</li>
+    <li>Coordinación de renta de vehículos e itinerarios de viaje</li>
+    <li>Búsqueda de proveedores y servicios en principales ciudades del mundo</li>
+    <li>El usuario cubre directamente los costos de los servicios contratados</li>
+  </ul>
+  <div class="slide-nav">
+    <button class="nav-btn" onclick="prevSlide()"><i class="ti ti-arrow-left" aria-hidden="true"></i> Anterior</button>
+    <span class="slide-counter">7 / 10</span>
+    <button class="nav-btn" onclick="nextSlide()">Siguiente <i class="ti ti-arrow-right" aria-hidden="true"></i></button>
+  </div>
+</div>
+
+<div class="slide" id="slide-8">
+  <div class="program-badge badge-privilege">XCARE Privilege · Detalle de servicios</div>
+  <div class="slide-title">Salud, tránsito y mascotas</div>
+  <div class="slide-subtitle">Cobertura integral que acompaña al cliente más allá del vehículo.</div>
+  <div class="section-label">Telemedicina · 3 eventos anuales</div>
+  <ul class="tc-list">
+    <li>Asistencia primaria de salud vía teléfono inteligente</li>
+    <li>Respuestas y recomendaciones sobre signos o síntomas del usuario</li>
+    <li>Excluye situaciones derivadas de actos ilícitos, consumo de sustancias o deportes de alto riesgo</li>
+  </ul>
+  <div class="divider"></div>
+  <div class="section-label">Asesoría legal de tránsito · Ilimitado</div>
+  <ul class="tc-list">
+    <li>Orientación sobre verificación vehicular, tenencia y refrendo</li>
+    <li>Consulta de multas y restricciones de Hoy No Circula por entidad</li>
+    <li>No incluye ejecución de trámites ni representación ante autoridades</li>
+  </ul>
+  <div class="divider"></div>
+  <div class="section-label">Asistencia veterinaria y seguro para mascotas</div>
+  <ul class="tc-list">
+    <li>Concierge veterinario ilimitado + 3 consultas virtuales al año</li>
+    <li>Seguro: 1 evento · hasta $3,000 MXN · aplica a más de 100 km del domicilio</li>
+    <li>Excluye prescripción y diagnóstico formal vía telefónica</li>
+  </ul>
+  <div class="slide-nav">
+    <button class="nav-btn" onclick="prevSlide()"><i class="ti ti-arrow-left" aria-hidden="true"></i> Anterior</button>
+    <span class="slide-counter">8 / 10</span>
+    <button class="nav-btn" onclick="nextSlide()">Siguiente <i class="ti ti-arrow-right" aria-hidden="true"></i></button>
+  </div>
+</div>
+
+<div class="slide" id="slide-9">
+  <div class="program-badge badge-privilege">XCARE Privilege · Proceso de uso</div>
+  <div class="slide-title">Acceso actual y próxima evolución digital</div>
+  <div class="slide-subtitle">Proceso transitorio mientras se implementa la plataforma digital.</div>
+  <div class="process-steps">
+    <div class="step">
+      <div class="step-num purple">1</div>
+      <div class="step-content">
+        <div class="step-title">El cliente contacta directamente al número de XCARE Privilege</div>
+        <div class="step-desc">55 4161 6991 — proceso vigente en este momento</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num purple">2</div>
+      <div class="step-content">
+        <div class="step-title">Solicita el servicio requerido</div>
+        <div class="step-desc">Concierge, telemedicina, asesoría legal, asistencia veterinaria u otro beneficio de la membresía.</div>
+      </div>
+    </div>
+  </div>
+  <div class="highlight-box purple" style="margin-top:1.5rem">
+    <i class="ti ti-device-mobile" style="font-size:16px;color:#534AB7;vertical-align:-2px;margin-right:6px" aria-hidden="true"></i>
+    <span class="highlight-text purple">En aproximadamente 2 semanas se habilitará registro por código QR, wallet digital personalizado y una experiencia completamente digital para el cliente.</span>
+  </div>
+  <div class="slide-nav">
+    <button class="nav-btn" onclick="prevSlide()"><i class="ti ti-arrow-left" aria-hidden="true"></i> Anterior</button>
+    <span class="slide-counter">9 / 10</span>
+    <button class="nav-btn" onclick="nextSlide()">Siguiente <i class="ti ti-arrow-right" aria-hidden="true"></i></button>
+  </div>
+</div>
+
+<div class="slide" id="slide-10">
+  <div class="program-badge badge-both">Contacto y cierre</div>
+  <div class="slide-title">Diferenciadores competitivos · Acción para distribuidores</div>
+  <div class="slide-subtitle">XCARE y XCARE Privilege impactan directamente en la decisión de compra y percepción de marca.</div>
+  <div class="section-label">Acciones clave para distribuidores</div>
+  <ul class="tc-list" style="margin-bottom:1.5rem">
+    <li>Comunicar activamente ambos programas durante el proceso de venta</li>
+    <li>Utilizar los beneficios como argumento de cierre ante objeciones</li>
+    <li>Reforzar los beneficios durante la entrega del vehículo</li>
+    <li>Incluir la póliza de garantía impresa en cada entrega</li>
+  </ul>
+  <div class="section-label">Contacto directo</div>
+  <div class="contact-row">
+    <div class="contact-card">
+      <div class="contact-name">Marco Antonio Damián Valerio</div>
+      <div class="contact-info">After Sales Director<br>marco.damian@xiaopeng.com<br>722 390 0879</div>
+    </div>
+    <div class="contact-card">
+      <div class="contact-name">Osmel Ramírez Castro</div>
+      <div class="contact-info">Technical Manager<br>osmel.ramirez@xiaopeng.com<br>722 364 6741</div>
+    </div>
+  </div>
+  <div class="highlight-box" style="margin-top:1.25rem;text-align:center">
+    <div class="highlight-text" style="font-weight:500">Sigamos elevando la experiencia de nuestros clientes.</div>
+  </div>
+  <div class="slide-nav">
+    <button class="nav-btn" onclick="prevSlide()"><i class="ti ti-arrow-left" aria-hidden="true"></i> Anterior</button>
+    <span class="slide-counter">10 / 10</span>
+    <button class="nav-btn" onclick="nextSlide()" disabled>Siguiente <i class="ti ti-arrow-right" aria-hidden="true"></i></button>
+  </div>
+</div>
+
+</div>
+
+<script>
+let current = 1;
+const total = 10;
+function showSlide(n){
+  document.querySelectorAll('.slide').forEach(s=>s.classList.remove('active'));
+  document.getElementById('slide-'+n).classList.add('active');
+}
+function nextSlide(){if(current<total){current++;showSlide(current);}}
+function prevSlide(){if(current>1){current--;showSlide(current);}}
+</script>
